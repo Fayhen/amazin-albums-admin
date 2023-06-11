@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Album } from './interfaces/album.interface';
+import { SaveAlbumDto } from './dto/create-album.dto';
+import { FirestoreService } from 'src/firebase/firestore.service';
 
 @Injectable()
 export class AlbumsService {
+  constructor(private firestoreService: FirestoreService) {}
+
   private readonly albums: Album[] = [
     {
       albumCaption: 'string',
@@ -42,5 +46,9 @@ export class AlbumsService {
         return (album.albumName = name);
       }) || null
     );
+  }
+
+  async saveAlbum(album: SaveAlbumDto) {
+    await this.firestoreService.saveAlbum(album);
   }
 }

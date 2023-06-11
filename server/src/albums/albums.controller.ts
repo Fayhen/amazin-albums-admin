@@ -1,5 +1,5 @@
 import { Controller, Body, Get, Post } from '@nestjs/common';
-import { CreateAlbumDto } from './dto/create-album.dto';
+import { SaveAlbumDto } from './dto/create-album.dto';
 import { AlbumsService } from './albums.service';
 import { Album } from './interfaces/album.interface';
 
@@ -13,7 +13,7 @@ export class AlbumsController {
   }
 
   @Post()
-  create(@Body() createItemDto: CreateAlbumDto): string {
-    return JSON.stringify(createItemDto);
+  async create(@Body() saveAlbumDto: SaveAlbumDto) {
+    return await this.albumService.saveAlbum(saveAlbumDto);
   }
 }

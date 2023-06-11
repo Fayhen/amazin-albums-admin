@@ -1,7 +1,11 @@
 /**
- * Album creation DTO.
+ * Album Firestore creation/update DTO.
  */
-export class SaveAlbumDto {
+export class SetAlbumDto {
+  /**
+   * Albums's UUID in Firestore.
+   */
+  readonly albumId?: string;
   /**
    * Bandcamp's album caption used in their album player.
    */
@@ -10,10 +14,6 @@ export class SaveAlbumDto {
    * Bandcamp's URL address to the album cover art.
    */
   readonly albumCover: string;
-  /**
-   * Albums's UUID in Firestore.
-   */
-  readonly albumId?: string;
   /**
    * Album's name.
    */
