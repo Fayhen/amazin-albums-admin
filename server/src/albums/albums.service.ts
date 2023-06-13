@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Album } from './interfaces/album.interface';
-import { SaveAlbumDto } from './dto/create-album.dto';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
 import { FirestoreService } from 'src/firebase/firestore.service';
 
 @Injectable()
@@ -48,7 +49,11 @@ export class AlbumsService {
     );
   }
 
-  async saveAlbum(album: SaveAlbumDto) {
-    await this.firestoreService.saveAlbum(album);
+  async createAlbum(album: CreateAlbumDto) {
+    return await this.firestoreService.createAlbum(album);
+  }
+
+  async updateAlbum(album: UpdateAlbumDto) {
+    return await this.firestoreService.setAlbum(album);
   }
 }

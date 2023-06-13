@@ -1,3 +1,6 @@
+/**
+ * Album data returned by the API.
+ */
 export interface Album {
   /**
    * Bandcamp's album caption used in their album player.

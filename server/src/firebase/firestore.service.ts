@@ -26,23 +26,33 @@ export class FirestoreService {
   }
 
   private generateDocumentUuid(name: string): string {
-    let parsed = name
+    const uuid = uuidV4();
+    const parsedName = name
       .trim()
       .toLowerCase()
       .replace(/[^a-zA-Z\s]+/g, '')
       .replace(/\s/g, '_');
 
-    if (parsed.length === 0) {
-      parsed = uuidV4();
+    if (parsedName.length === 0) {
+      return uuid;
     }
 
-    return parsed;
+    const fragment = parsedName.slice(0, 5);
+    return `${fragment}-${uuid}`;
   }
 
-  async saveAlbum(album: SetAlbumDto) {
-    const albumId = album.albumId || this.generateDocumentUuid(album.albumName);
+  async createAlbum(album: SetAlbumDto): Promise<SetAlbumDto> {
+    const albumId = this.generateDocumentUuid(album.albumName);
     const albumRef = this.db.collection('albums').doc(albumId);
+    const newAlbum: SetAlbumDto = { ...album, albumId };
+    await albumRef.set(newAlbum);
+    return newAlbum;
+  }
+
+  async setAlbum(album: SetAlbumDto): Promise<SetAlbumDto> {
+    const albumRef = this.db.collection('albums').doc(album.albumId);
     await albumRef.set(album);
+    return album;
   }
 
   async saveArtist(artist: SetArtistDto) {
