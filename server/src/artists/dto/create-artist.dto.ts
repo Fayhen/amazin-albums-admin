@@ -5,12 +5,7 @@ export class CreateArtistDto {
   /**
    * Artist's name.
    */
-  readonly name: string;
-  // /**
-  //  * Array of Album Firestore UUIDs belonging to this artist,
-  //  * if any.
-  //  */
-  // readonly albums?: string[];
+  readonly artistName: string;
   /**
    * Artist's Bandcamp link.
    */

@@ -5,16 +5,16 @@ export class Artist {
   /**
    * Artist's UUID in Firestore.
    */
-  readonly artistId?: string;
+  readonly artistId: string;
   /**
    * Artist's name.
    */
-  readonly name: string;
+  readonly artistName: string;
   /**
    * Array of Album Firestore UUIDs belonging to this artist,
    * if any.
    */
-  readonly albums?: string[];
+  readonly albums: string[];
   /**
    * Artist's Bandcamp link.
    */

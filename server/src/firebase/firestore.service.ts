@@ -56,7 +56,7 @@ export class FirestoreService {
   }
 
   async createArtist(artist: SetArtistDto): Promise<SetArtistDto> {
-    const artistId = this.generateDocumentUuid(artist.name);
+    const artistId = this.generateDocumentUuid(artist.artistName);
     const artistRef = this.db.collection('artists').doc(artistId);
     const newArtist = { ...artist, artistId };
     await artistRef.set(newArtist);
@@ -67,5 +67,17 @@ export class FirestoreService {
     const artistRef = this.db.collection('artists').doc(artist.artistId);
     await artistRef.set(artist);
     return artist;
+  }
+
+  async fetchArtistAlbumUuids(artistUuid: string): Promise<string[]> {
+    const albumsQueryRef = this.db
+      .collection('artists')
+      .doc(artistUuid)
+      .collection('albums');
+    const albumsQuerySnapshot = await albumsQueryRef.get();
+    const albumUuids = albumsQuerySnapshot.docs.map((doc) => {
+      return doc.id;
+    });
+    return albumUuids;
   }
 }

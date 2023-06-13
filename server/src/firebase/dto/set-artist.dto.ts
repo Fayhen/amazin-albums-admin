@@ -9,7 +9,7 @@ export class SetArtistDto {
   /**
    * Artist's name.
    */
-  readonly name: string;
+  readonly artistName: string;
   /**
    * Artist's Bandcamp link.
    */
