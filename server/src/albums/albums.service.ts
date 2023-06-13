@@ -8,52 +8,39 @@ import { FirestoreService } from 'src/firebase/firestore.service';
 export class AlbumsService {
   constructor(private firestoreService: FirestoreService) {}
 
-  private readonly albums: Album[] = [
-    {
-      albumCaption: 'string',
-      albumCover: 'string',
-      albumName: 'album1',
-      albumUrl: 'string',
-      artist: 'string',
-      artistId: 'string',
-      featured: false,
-      iframeSrc: 'string',
-      releaseDate: 'string',
-      created: 'string',
-      views: 1,
-    },
-    {
-      albumCaption: 'string',
-      albumCover: 'string',
-      albumName: 'album2',
-      albumUrl: 'string',
-      artist: 'string',
-      artistId: 'string',
-      featured: false,
-      iframeSrc: 'string',
-      releaseDate: 'string',
-      created: 'string',
-      views: 1,
-    },
-  ];
-
-  findAll(): Album[] {
-    return this.albums;
+  /**
+   * Creates a new album.
+   *
+   * Returns the new album' data, parsing it as needed.
+   *
+   * @param album New album data.
+   * @returns Parsed album data.
+   */
+  async createAlbum(album: CreateAlbumDto): Promise<Album> {
+    const newAlbum = await this.firestoreService.createAlbum(album);
+    delete newAlbum.created;
+    delete newAlbum.updated;
+    return {
+      ...newAlbum,
+      releaseDate: newAlbum.releaseDate.toDate().toISOString(),
+    };
   }
 
-  findByName(name: string): Album | null {
-    return (
-      this.albums.find((album) => {
-        return (album.albumName = name);
-      }) || null
-    );
-  }
-
-  async createAlbum(album: CreateAlbumDto) {
-    return await this.firestoreService.createAlbum(album);
-  }
-
-  async updateAlbum(album: UpdateAlbumDto) {
-    return await this.firestoreService.setAlbum(album);
+  /**
+   * Updates an existing album.
+   *
+   * Returns the updated album' data, parsing it as needed.
+   *
+   * @param album Album data to update.
+   * @returns Parsed album data.
+   */
+  async updateAlbum(album: UpdateAlbumDto): Promise<Album> {
+    const updatedAlbum = await this.firestoreService.setAlbum(album);
+    delete updatedAlbum.created;
+    delete updatedAlbum.updated;
+    return {
+      ...updatedAlbum,
+      releaseDate: updatedAlbum.releaseDate.toDate().toISOString(),
+    };
   }
 }

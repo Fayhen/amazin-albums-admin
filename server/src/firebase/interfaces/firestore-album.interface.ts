@@ -1,50 +1,60 @@
+import { Timestamp } from 'firebase-admin/firestore';
+
 /**
- * Album Firestore creation/update DTO.
+ * Album data saved in Firestore.
  */
-export class SetAlbumDto {
-  /**
-   * Albums's UUID in Firestore.
-   */
-  readonly albumId?: string;
+export interface FirestoreAlbum {
   /**
    * Bandcamp's album caption used in their album player.
    */
-  readonly albumCaption: string;
+  albumCaption: string;
   /**
    * Bandcamp's URL address to the album cover art.
    */
-  readonly albumCover: string;
+  albumCover: string;
+  /**
+   * Album's UUID in Firestore.
+   */
+  albumId: string;
   /**
    * Album's name.
    */
-  readonly albumName: string;
+  albumName: string;
   /**
    * Album's Bandcamp URL address.
    */
-  readonly albumUrl: string;
+  albumUrl: string;
   /**
-   * Author's Firestore UUID.
+   * Album's author Firestore ID.
    */
-  readonly artistId: string;
+  artistId: string;
   /**
    * Album's author.
    */
-  readonly artistName: string;
+  artistName: string;
+  /**
+   * Timestamp of the album's creation in Firestore.
+   */
+  created: Timestamp;
   /**
    * `true` if the album is featured. Featured albums appear on a
    * dedicated section in the Amazing Album's website.
    */
-  readonly featured: boolean;
+  featured: boolean;
   /**
    * Bandcamp's iframe `src` attribute used in their album player.
    */
-  readonly iframeSrc: string;
+  iframeSrc: string;
   /**
    * Timestamp of album's release date.
    */
-  readonly releaseDate: string;
+  releaseDate: Timestamp;
+  /**
+   * Timestamp of the album's last update Firestore.
+   */
+  updated: Timestamp;
   /**
    * Number of album visualizations in the Amazing Album's website.
    */
-  views?: number;
+  views: number;
 }

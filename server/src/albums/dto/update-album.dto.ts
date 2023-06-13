@@ -23,9 +23,13 @@ export class UpdateAlbumDto {
    */
   readonly albumUrl: string;
   /**
+   * Author's Firestore UUID.
+   */
+  readonly artistId: string;
+  /**
    * Album's author.
    */
-  readonly artist: string;
+  readonly artistName: string;
   /**
    * `true` if the album is featured. Featured albums appear on a
    * dedicated section in the Amazing Album's website.

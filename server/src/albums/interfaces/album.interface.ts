@@ -19,22 +19,18 @@ export interface Album {
    */
   albumUrl: string;
   /**
-   * Album's author.
-   */
-  artist: string;
-  /**
    * Album's author Firestore ID.
    */
   artistId: string;
   /**
-   * Timestamp of album's creation in Firestore.
+   * Album's author.
    */
-  created: string;
+  artistName: string;
   /**
    * `true` if the album is featured. Featured albums appear on a
    * dedicated section in the Amazing Album's website.
    */
-  readonly featured: boolean;
+  featured: boolean;
   /**
    * Bandcamp's iframe `src` attribute used in their album player.
    */
@@ -44,8 +40,7 @@ export interface Album {
    */
   releaseDate: string;
   /**
-   * Number of times this album was visualized in the Amazing Album's
-   * website.
+   * Number of album visualizations in the Amazing Album's website.
    */
   views: number;
 }
