@@ -11,7 +11,7 @@ export class AlbumsService {
   /**
    * Creates a new album.
    *
-   * Returns the new album' data, parsing it as needed.
+   * Returns the new album data, parsing it as needed.
    *
    * @param album New album data.
    * @returns Parsed album data.
@@ -29,13 +29,16 @@ export class AlbumsService {
   /**
    * Updates an existing album.
    *
-   * Returns the updated album' data, parsing it as needed.
+   * Returns the updated album data, parsing it as needed.
    *
    * @param album Album data to update.
    * @returns Parsed album data.
    */
-  async updateAlbum(album: UpdateAlbumDto): Promise<Album> {
+  async updateAlbum(album: UpdateAlbumDto): Promise<Album | null> {
     const updatedAlbum = await this.firestoreService.setAlbum(album);
+    if (!updatedAlbum) {
+      return null;
+    }
     delete updatedAlbum.created;
     delete updatedAlbum.updated;
     return {

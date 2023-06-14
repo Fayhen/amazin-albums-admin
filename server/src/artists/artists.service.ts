@@ -39,6 +39,9 @@ export class ArtistsService {
    */
   async updateArtist(artist: UpdateArtistDto): Promise<Artist | null> {
     const updatedArtist = await this.firestoreService.setArtist(artist);
+    if (!updatedArtist) {
+      return null;
+    }
     const artistAlbums = await this.firestoreService.fetchArtistAlbums(
       updatedArtist.artistId,
     );
