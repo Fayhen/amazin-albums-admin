@@ -8,26 +8,44 @@ import { Artist } from './interfaces/artist.interface';
 export class ArtistsService {
   constructor(private firestoreService: FirestoreService) {}
 
+  /**
+   * Created a new artist.
+   *
+   * Returns the new artist data, parsing it as needed.
+   *
+   * @param artist New artist data.
+   * @returns Parsed artist data.
+   */
   async createArtist(artist: CreateArtistDto): Promise<Artist> {
-    const artistData = await this.firestoreService.createArtist(artist);
-    const artistAlbums = await this.firestoreService.fetchArtistAlbumUuids(
-      artistData.artistId,
+    const newArtist = await this.firestoreService.createArtist(artist);
+    const artistAlbums = await this.firestoreService.fetchArtistAlbums(
+      newArtist.artistId,
     );
+    delete newArtist.created;
+    delete newArtist.updated;
     return {
-      ...artistData,
-      artistId: artistData.artistId,
+      ...newArtist,
       albums: artistAlbums,
     };
   }
 
-  async updateArtist(artist: UpdateArtistDto): Promise<Artist> {
-    const artistData = await this.firestoreService.setArtist(artist);
-    const artistAlbums = await this.firestoreService.fetchArtistAlbumUuids(
-      artistData.artistId,
+  /**
+   * Updates an existing artist.
+   *
+   * Returns the updated artist data, parsing it as needed.
+   *
+   * @param artist Artist data to updated.
+   * @returns parsed artist data.
+   */
+  async updateArtist(artist: UpdateArtistDto): Promise<Artist | null> {
+    const updatedArtist = await this.firestoreService.setArtist(artist);
+    const artistAlbums = await this.firestoreService.fetchArtistAlbums(
+      updatedArtist.artistId,
     );
+    delete updatedArtist.created;
+    delete updatedArtist.updated;
     return {
-      ...artistData,
-      artistId: artistData.artistId,
+      ...updatedArtist,
       albums: artistAlbums,
     };
   }

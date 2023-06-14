@@ -5,6 +5,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { SetAlbumDto } from './dto/set-album.dto';
 import { SetArtistDto } from './dto/set-artist.dto';
 import { FirestoreAlbum } from './interfaces/firestore-album.interface';
+import { FirestoreArtist } from './interfaces/firestore-artist.interface';
 
 @Injectable()
 export class FirestoreService {
@@ -55,22 +56,6 @@ export class FirestoreService {
   }
 
   /**
-   * Fetches an album from its UUID in Firestore, returning `null`
-   * if it is not found.
-   *
-   * @param uuid Album Firestore UUID.
-   * @returns Firestore Album data or `null`.
-   */
-  async fetchAlbumById(uuid: string): Promise<FirestoreAlbum | null> {
-    const albumRef = this.db.collection('albums').doc(uuid);
-    const albumSnapshot = await albumRef.get();
-    if (!albumSnapshot.exists) {
-      return null;
-    }
-    return albumSnapshot.data() as FirestoreAlbum;
-  }
-
-  /**
    * Creates a new album in Firestore.
    *
    * Returns the newly created album data.
@@ -105,14 +90,14 @@ export class FirestoreService {
    * @param album Album data to update.
    * @returns Firestore album data or `null`.
    */
-  async setAlbum(album: SetAlbumDto): Promise<FirestoreAlbum> {
-    const albumRef = this.db.collection('albums').doc(album.albumId);
+  async setAlbum(album: SetAlbumDto): Promise<FirestoreAlbum | null> {
     const previousData = await this.fetchAlbumById(album.albumId);
     if (!previousData) {
       return null;
     }
+
     const { albumId, created, views } = previousData;
-    const updatedData: FirestoreAlbum = {
+    const updatedAlbum: FirestoreAlbum = {
       ...album,
       albumId: album.albumId || albumId,
       created,
@@ -120,25 +105,86 @@ export class FirestoreService {
       updated: Timestamp.now(),
       views,
     };
-    await albumRef.set(updatedData);
-    return updatedData;
+
+    const albumRef = this.db.collection('albums').doc(album.albumId);
+    await albumRef.set(updatedAlbum);
+    return updatedAlbum;
   }
 
-  async createArtist(artist: SetArtistDto): Promise<SetArtistDto> {
+  /**
+   * Fetches an album by its UUID in Firestore, returning `null`
+   * if it is not found.
+   *
+   * @param uuid Album Firestore UUID.
+   * @returns Firestore album data or `null`.
+   */
+  async fetchAlbumById(uuid: string): Promise<FirestoreAlbum | null> {
+    const albumRef = this.db.collection('albums').doc(uuid);
+    const albumSnapshot = await albumRef.get();
+    if (!albumSnapshot.exists) {
+      return null;
+    }
+    return albumSnapshot.data() as FirestoreAlbum;
+  }
+
+  /**
+   * Creates a new artist in Firestore.
+   *
+   * Returns the newly created artist data.
+   *
+   * @param artist New artist data.
+   * @returns Firestore artist data.
+   */
+  async createArtist(artist: SetArtistDto): Promise<FirestoreArtist> {
     const artistId = this.generateDocumentUuid(artist.artistName);
     const artistRef = this.db.collection('artists').doc(artistId);
-    const newArtist = { ...artist, artistId };
+    const newArtist: FirestoreArtist = {
+      ...artist,
+      artistId,
+      created: Timestamp.now(),
+      updated: Timestamp.now(),
+    };
     await artistRef.set(newArtist);
     return newArtist;
   }
 
-  async setArtist(artist: SetArtistDto): Promise<SetArtistDto> {
+  /**
+   * Updates an existing artist on Firestore.
+   *
+   * Returns the updated artist data, or `null` if it is not found.
+   *
+   * The `created` property is kept unmodified.
+   *
+   * @param album Album data to update.
+   * @returns Firestore album data or `null`.
+   */
+  async setArtist(artist: SetArtistDto): Promise<FirestoreArtist | null> {
+    const previousData = await this.fetchArtistById(artist.artistId);
+    if (!previousData) {
+      return null;
+    }
+
+    const { artistId, created } = previousData;
+    const updatedArtist: FirestoreArtist = {
+      ...artist,
+      artistId: artist.artistId || artistId,
+      created,
+      updated: Timestamp.now(),
+    };
+
     const artistRef = this.db.collection('artists').doc(artist.artistId);
-    await artistRef.set(artist);
-    return artist;
+    await artistRef.set(updatedArtist);
+    return updatedArtist;
   }
 
-  async fetchArtistAlbumUuids(artistUuid: string): Promise<string[]> {
+  /**
+   * Retrieves the artist's albums from Firestore as an array of
+   * album UUIDs.
+   *
+   * @param artistUuid Artist UUID in Firestore.
+   * @returns Array of album UUIDs.
+   */
+  async fetchArtistAlbums(artistUuid: string): Promise<string[]> {
     const albumsQueryRef = this.db
       .collection('artists')
       .doc(artistUuid)
@@ -148,5 +194,21 @@ export class FirestoreService {
       return doc.id;
     });
     return albumUuids;
+  }
+
+  /**
+   * Fetches an artist by its UUID in Firestore, returning `null`
+   * if it is not found.
+   *
+   * @param uuid Artist Firestore UUID.
+   * @returns Firestore artist data or `null`.
+   */
+  async fetchArtistById(uuid: string): Promise<FirestoreArtist> {
+    const artistRef = this.db.collection('artists').doc(uuid);
+    const artistSnapshot = await artistRef.get();
+    if (!artistSnapshot.exists) {
+      return null;
+    }
+    return artistSnapshot.data() as FirestoreArtist;
   }
 }
