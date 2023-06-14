@@ -1,3 +1,5 @@
+import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+
 /**
  * Artist Creation DTO.
  */
@@ -5,37 +7,53 @@ export class CreateArtistDto {
   /**
    * Artist's name.
    */
+  @IsNotEmpty()
   readonly artistName: string;
   /**
    * Artist's Bandcamp link.
    */
+  @IsUrl()
   readonly bandcamp: string;
   /**
    * Artist's Facebook profile link, if any.
    */
-  readonly facebook?: string;
+  @IsOptional()
+  @IsUrl()
+  readonly facebook: string;
   /**
    * Artist's online site, if any.
    */
-  readonly homepage?: string;
+  @IsOptional()
+  @IsUrl()
+  readonly homepage: string;
   /**
    * Artist's Instagram link, if any.
    */
-  readonly instagram?: string;
+  @IsOptional()
+  @IsUrl()
+  readonly instagram: string;
   /**
    * Artist's TikTok link, if any.
    */
-  readonly tiktok?: string;
+  @IsOptional()
+  @IsUrl()
+  readonly tiktok: string;
   /**
    * Artist's Twitch link, if any.
    */
-  readonly twitch?: string;
+  @IsOptional()
+  @IsUrl()
+  readonly twitch: string;
   /**
    * Artist's Twitter link, if any.
    */
-  readonly twitter?: string;
+  @IsOptional()
+  @IsUrl()
+  readonly twitter: string;
   /**
    * Artist's YouTube channel, if any.
    */
-  readonly youtube?: string;
+  @IsOptional()
+  @IsUrl()
+  readonly youtube: string;
 }

@@ -1,7 +1,7 @@
 /**
  * Artist data returned by the API.
  */
-export class Artist {
+export interface Artist {
   /**
    * Artist's UUID in Firestore.
    */

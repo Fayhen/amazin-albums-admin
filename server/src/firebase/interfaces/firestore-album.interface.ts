@@ -50,7 +50,7 @@ export interface FirestoreAlbum {
    */
   releaseDate: Timestamp;
   /**
-   * Timestamp of the album's last update Firestore.
+   * Timestamp of the album's last update in Firestore.
    */
   updated: Timestamp;
   /**
